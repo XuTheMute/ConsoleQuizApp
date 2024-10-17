@@ -1,8 +1,24 @@
-﻿namespace ConsoleQuizApp
+﻿using static System.Formats.Asn1.AsnWriter;
+
+namespace ConsoleQuizApp
 {
     internal class Program
     {
         static void Main(string[] args)
+        {
+            List<QuizQuestion> questions = GetQuizQuestions();
+
+            int score = 0;
+
+            foreach (QuizQuestion question in questions) {
+                if (AskQuestion(question)) score++;
+            }
+
+            Console.WriteLine($"You answered {score} out of {questions.Count} questions correctly.");
+
+
+        }
+        private static List<QuizQuestion> GetQuizQuestions()
         {
             List<QuizQuestion> questions = new List<QuizQuestion>();
 
@@ -17,29 +33,26 @@
             questions.Add(new QuizQuestion("What is the square root of 64?", "8"));
             questions.Add(new QuizQuestion("What is the smallest prime number?", "2"));
 
-            int score = 0;
-
-            foreach (QuizQuestion question in questions) {
-                Console.WriteLine(question.Question);
-                string userAnswer = Console.ReadLine();
-
-                if (userAnswer.Equals(question.Answer, StringComparison.OrdinalIgnoreCase))
-                {
-                    Console.WriteLine();
-                    score++;
-                    Console.WriteLine("Your answer is correct.");
-                }
-                else
-                {
-                    Console.WriteLine($"The right answer is {question.Answer}");
-                }
-            }
-
-            Console.WriteLine($"You are right answered on {score} questions of {questions.Count}. You get {score} points.");
-
-
+            return questions;
         }
 
+        private static bool AskQuestion(QuizQuestion question)
+        {
+            Console.WriteLine(question.Question);
+            string userAnswer = Console.ReadLine();
+
+            if (userAnswer.Equals(question.Answer, StringComparison.OrdinalIgnoreCase))
+            {
+                Console.WriteLine();
+                Console.WriteLine("Your answer is correct.");
+                return true;
+            }
+            else
+            {
+                Console.WriteLine($"The right answer is {question.Answer}");
+                return false;
+            }
+        }
         private class QuizQuestion
         {
             public string Question { get; set; }
@@ -50,6 +63,8 @@
                 Question = question;
                 Answer = answer;
             }
+
+
 
         }
     }
